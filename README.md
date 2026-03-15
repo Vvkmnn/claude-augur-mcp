@@ -12,9 +12,9 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for **
 
 ---
 
-Claude's reasoning about plans is invisible. When Claude writes a plan, its decisions, assumptions, and tradeoffs are buried in the document —you have to read the entire thing to find them. If Claude assumed the wrong approach or made a bad tradeoff, you won't know until implementation is underway and something breaks.
+Claude's reasoning about plans is invisible. When Claude writes a plan, its decisions, assumptions, and tradeoffs are buried in the document — you have to read the entire thing to find them. If Claude assumed the wrong approach or made a bad tradeoff, you won't know until implementation is underway and something breaks.
 
-Augur reads the plan structure and returns a template that Claude fills with its actual reasoning —inline in the response, not hidden in a collapsed tool result. You see decisions, assumptions, and tradeoffs at a glance and can correct them before a single line of code is written.
+Augur reads the plan structure and returns a template that Claude fills with its actual reasoning — inline in the response, not hidden in a collapsed tool result. You see decisions, assumptions, and tradeoffs at a glance and can correct them before a single line of code is written.
 
 ## install
 
@@ -25,7 +25,7 @@ Augur reads the plan structure and returns a template that Claude fills with its
 **From shell:**
 
 ```bash
-claude mcp add claude-augur-mcp —npx claude-augur-mcp
+claude mcp add claude-augur-mcp -- npx claude-augur-mcp
 ```
 
 **From inside Claude** (restart required):
@@ -50,7 +50,7 @@ Install this mcp: https://github.com/Vvkmnn/claude-augur-mcp
 }
 ```
 
-There is **no `npm install` required** —no external databases, no indexing, only Node.js built-ins for filesystem access.
+There is **no `npm install` required** — no external databases, no indexing, only Node.js built-ins for filesystem access.
 
 However, if `npx` resolves the wrong package, you can force resolution with:
 
@@ -64,7 +64,7 @@ npm install -g claude-augur-mcp
 
 #### augur_explain
 
-Read a plan file and return a structured template for Claude to fill with its reasoning. Claude renders the abstract **inline in its response** —not hidden in a collapsed tool result.
+Read a plan file and return a structured template for Claude to fill with its reasoning. Claude renders the abstract **inline in its response** — not hidden in a collapsed tool result.
 
 **Call after writing or editing a plan file:**
 
@@ -74,13 +74,13 @@ augur_explain plan_path="/Users/you/.claude/plans/your-plan.md"
 
 **MCP returns two content blocks:**
 
-Block 1 —one-line summary, visible even when the tool result is collapsed:
+Block 1 — one-line summary, visible even when the tool result is collapsed:
 
 ```
 your-plan.md · 10/18 done
 ```
 
-Block 2 —template with pre-rendered header, progress, and `[FILL]` markers:
+Block 2 — template with pre-rendered header, progress, and `[FILL]` markers:
 
 ```
 ┌ 📐 my-project · your-plan.md ────────────────────────────────────
@@ -152,45 +152,68 @@ Block 2 —template with pre-rendered header, progress, and `[FILL]` markers:
 
 ## methodology
 
-How [claude-augur-mcp](https://github.com/Vvkmnn/claude-augur-mcp) works:
+How [claude-augur-mcp](https://github.com/Vvkmnn/claude-augur-mcp) [reads](https://github.com/Vvkmnn/claude-augur-mcp/tree/main/src) plans:
 
 ```
                     📐 claude-augur-mcp
                     ━━━━━━━━━━━━━━━━━━━
 
-              Claude writes/edits a plan
-                        │
-                        ▼
-              ┌─────────────────────┐
-              │  augur_explain      │  read plan from disk
-              │  (plan_path)        │
-              └─────────┬───────────┘
-                        │
-              ┌─────────▼───────────┐
-              │  extractPlanStructure│  parse H1, H2, H3, checkboxes
-              │  (session.ts)       │  count steps, done/pending
-              └─────────┬───────────┘
-                        │
-              ┌─────────▼───────────┐
-              │  renderTemplate     │  left-gutter format
-              │  (render.ts)        │  pre-render header + progress
-              │                     │  [FILL] markers for Claude
-              └─────────┬───────────┘
-                        │
-              ┌─────────▼───────────┐
-              │  return 2 blocks    │  block 1: summary (visible collapsed)
-              │                     │  block 2: template for inline render
-              └─────────────────────┘
-                        │
-                        ▼
-              Claude fills [FILL] markers
-              with its actual reasoning
-              and renders inline
+              Claude writes a plan
+                augur_explain
+                    │
+                    ▼
+              ┌─────────────────┐
+              │  read plan file │  from disk (read-only)
+              │  (session.ts)   │
+              └────────┬────────┘
+                       │
+                       ├── title → project name (before ":")
+                       ├── purpose → **Primary goal**: or first prose
+                       ├── sections → H2 headings
+                       └── progress → ### Step N: with [x]/[ ] counts
+                       │
+              ┌────────▼────────┐
+              │ render template │  left-gutter format
+              │ (render.ts)     │  [FILL] markers for Claude
+              └────────┬────────┘
+                       │
+          ┌────────────┴────────────┐
+          ▼                         ▼
+     block 1                   block 2
+     summary                   template
+     (visible collapsed)       (Claude renders inline)
+          │                         │
+          ▼                         ▼
+     plan.md · 10/18 done      ┌ 📐 project · plan.md ──
+                               │ purpose...
+                               ├ Progress ────────────
+                               │ Done (10/18): Auth + 1
+                               ├ Decisions ───────────
+                               │ [FILL]
+                               ├ Assumptions ─────────
+                               │ [FILL]
+                               └──────────────────────
+
+
+     TEMPLATE SEEDING:
+
+     Regex extraction of Claude's thinking blocks produces garbage —
+     free-form prose has no structured patterns to match.
+
+     Augur takes a different approach: extract plan structure (the
+     deterministic part), seed a template, let Claude fill reasoning
+     (the part only Claude knows). Structure from MCP, content from
+     Claude. Consistent format, accurate reasoning.
+
+     MCP pre-renders              Claude fills
+     ──────────────               ────────────
+     header + purpose             decisions
+     progress counts              assumptions
+     section labels               tradeoffs
+     formatting rules             reasoning
 ```
 
-**Template seeding**: The MCP server handles structure (header, progress, section labels, formatting rules). Claude handles content (decisions, assumptions, tradeoffs, reasoning). This split ensures consistent formatting while keeping reasoning accurate —Claude knows its own context better than any regex could extract.
-
-**Two-block return**: MCP tool results get collapsed in Claude Code UI. Block 1 is a one-line summary visible even when collapsed. Block 2 is the full template that Claude renders inline in its response —visible to the user without expanding.
+**Two-block return**: MCP tool results get collapsed in Claude Code UI. Block 1 is a one-line summary visible even when collapsed. Block 2 is the full template that Claude renders inline in its response — visible to the user without expanding.
 
 **Read-only**: `augur_explain` only reads the plan file. No disk writes, no state, no side effects. Works in plan mode.
 
@@ -212,18 +235,18 @@ claude-augur-mcp/
 
 **Design principles:**
 
-- **Template seeding over regex extraction** —regex on thinking blocks produced garbage; template seeding lets Claude fill its own reasoning accurately
-- **Inline over collapsed** —tool results get collapsed in Claude Code UI; inline rendering keeps the abstract visible
-- **Read-only** —no disk writes, no state, works in plan mode
-- **Single tool** —`augur_explain` does one thing well; no CRUD, no storage, no insight management
-- **Left-gutter format** —`┌│├└` vertical bar with no right border; can't misalign, renders cleanly in any terminal width
-- **Never truncate** —purpose and header always render in full; word-wrapped, never cut
+- **Template seeding over regex extraction** — regex on thinking blocks produced garbage; template seeding lets Claude fill its own reasoning accurately
+- **Inline over collapsed** — tool results get collapsed in Claude Code UI; inline rendering keeps the abstract visible
+- **Read-only** — no disk writes, no state, works in plan mode
+- **Single tool** — `augur_explain` does one thing well; no CRUD, no storage, no insight management
+- **Left-gutter format** — `┌│├└` vertical bar with no right border; can't misalign, renders cleanly in any terminal width
+- **Never truncate** — purpose and header always render in full; word-wrapped, never cut
 
 **Design influences:**
 
-- [Architecture Decision Records](https://adr.github.io/) —structured format for capturing decisions with context and consequences
-- [Y-Statement ADR variant](https://medium.com/olzzio/y-statements-10eb07b5a177) —concise decision format: "In context X, facing Y, we decided Z, accepting C"
-- Roman [Augurs](https://en.wikipedia.org/wiki/Augur) —priests who interpreted signs and patterns to reveal meaning hidden from ordinary observation
+- [Architecture Decision Records](https://adr.github.io/) — structured format for capturing decisions with context and consequences
+- [Y-Statement ADR variant](https://medium.com/olzzio/y-statements-10eb07b5a177) — concise decision format: "In context X, facing Y, we decided Z, accepting C"
+- Roman [Augurs](https://en.wikipedia.org/wiki/Augur) — priests who interpreted signs and patterns to reveal meaning hidden from ordinary observation
 
 ## development
 
@@ -264,6 +287,6 @@ Learn from examples:
 
 <p align="center">
 
-_**[Tomb of the Augurs](https://en.wikipedia.org/wiki/Tomb_of_the_Augurs)**, fresco (Tarquinia, ~530 BCE). Claudius —emperor, scholar, and member of the Augural College —wrote [Tyrrenika](https://en.wikipedia.org/wiki/Tyrrenika), a lost 20-volume history of Etruscan civilization and their methods of divination. The augurs' role was not to predict the future, but to interpret the signs and reveal whether a proposed course of action had merit._
+_**[Tomb of the Augurs](https://en.wikipedia.org/wiki/Tomb_of_the_Augurs)**, fresco (Tarquinia, ~530 BCE). Claudius — emperor, scholar, and member of the Augural College — wrote [Tyrrenika](https://en.wikipedia.org/wiki/Tyrrenika), a lost 20-volume history of Etruscan civilization and their methods of divination. The augurs' role was not to predict the future, but to interpret the signs and reveal whether a proposed course of action had merit._
 
 </p>
