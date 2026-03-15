@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Demo artifacts (keep only demo.gif)
+demo/*.cast
+demo/*.mp4
+demo/*.mov
+demo/.claude/
+
+# Local configuration
+.claude/*
+!.claude/skills/
+.mcp.json
+
+# Development
+*.log

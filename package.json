@@ -1,0 +1,58 @@
+{
+  "name": "claude-augur-mcp",
+  "version": "0.1.0",
+  "description": "An MCP server that surfaces Claude's reasoning chain as scannable plan abstracts and persists educational insights",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "claude-augur-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "anthropic",
+    "reasoning",
+    "plan-summary",
+    "insights",
+    "augur",
+    "typescript",
+    "nodejs"
+  ],
+  "author": "Vvkmnn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vvkmnn/claude-augur-mcp.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "typescript": "^5.9.3"
+  }
+}
