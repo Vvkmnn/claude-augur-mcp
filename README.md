@@ -1,10 +1,10 @@
-<!-- <img align="right" src="claude-augur.svg" alt="claude-augur-mcp" width="220"> -->
+<img align="right" src="claude-augur.svg" alt="claude-augur-mcp" width="220">
 
 # claude-augur-mcp
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for **plan reasoning summaries** in [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Surfaces decisions, tradeoffs, and assumptions as scannable abstracts so you can correct Claude's reasoning at a glance.
 
-<!-- <br clear="right"> -->
+<br clear="right">
 
 ![claude-augur-mcp](demo/demo.gif)
 

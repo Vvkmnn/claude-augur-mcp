@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 124 96" width="253" height="196">
+  <style>
+    .toga-back { animation: back-sway 3s ease-in-out infinite; transform-origin: 16px 37px; }
+    .band-1 { animation: band1-sway 3.2s ease-in-out infinite; }
+    .band-2 { animation: band2-sway 2.9s ease-in-out infinite; }
+    .band-3 { animation: band3-sway 3.6s ease-in-out infinite; }
+    .band-4 { animation: band4-sway 2.5s ease-in-out infinite; }
+    .band-5 { animation: band5-sway 3.1s ease-in-out infinite; }
+    .ruler-arm { animation: ruler-hold 3s ease-in-out infinite; transform-origin: 92px 48px; }
+    .ruler { animation: ruler-sway 4s ease-in-out infinite; transform-origin: 94px 48px; }
+
+    @keyframes back-sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-2.5deg); } }
+    @keyframes band1-sway { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-0.4px); } 65% { transform: translateX(0.15px); } }
+    @keyframes band2-sway { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(0.3px); } 70% { transform: translateX(-0.1px); } }
+    @keyframes band3-sway { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-0.25px); } 60% { transform: translateX(0.2px); } }
+    @keyframes band4-sway { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(0.35px); } 75% { transform: translateX(-0.15px); } }
+    @keyframes band5-sway { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-0.2px); } 70% { transform: translateX(0.1px); } }
+    @keyframes ruler-hold { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1deg); } }
+    @keyframes ruler-sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-1.5deg); } }
+  </style>
+
+  <!-- Back toga drape -->
+  <g class="toga-back">
+    <polygon points="16,36 10,36 6,72 8,82 20,82 22,68" fill="#9B1B1B"/>
+    <polygon points="16,36 12,36 8,72 10,78 16,68" fill="#7A1515" opacity="0.7"/>
+  </g>
+
+  <!-- Body -->
+  <rect x="18" y="32" width="64" height="4" fill="#E07C4C"/>
+  <rect x="14" y="36" width="72" height="32" fill="#E07C4C"/>
+
+  <!-- Ears -->
+  <rect x="22" y="18" width="8" height="14" fill="#E07C4C"/>
+  <rect x="70" y="18" width="8" height="14" fill="#E07C4C"/>
+
+  <!-- Legs -->
+  <rect x="24" y="68" width="12" height="14" fill="#E07C4C"/>
+  <rect x="64" y="68" width="12" height="14" fill="#E07C4C"/>
+
+  <!-- Front toga (strap + bands) -->
+  <g class="toga-front">
+    <g class="band-5">
+      <path d="M18,58 Q14,48 12,37 L20,37 Q20,48 34,63 Z" fill="#9B1B1B"/>
+      <path d="M20,58 Q16,48 13,38 L19,38 Q19,48 30,61 Z" fill="#7A1515" opacity="0.4"/>
+      <line x1="24" y1="59" x2="17" y2="39" stroke="#5E1010" stroke-width="0.6" opacity="0.5"/>
+    </g>
+    <g class="band-1"><path d="M12,65 Q38,80 86,69 L86,76 Q40,85 12,73 Z" fill="#5E1010"/></g>
+    <g class="band-2"><path d="M12,62 Q60,75 87,62 L87,69 Q58,79 12,69 Z" fill="#7A1515"/></g>
+    <g class="band-3"><path d="M12,59 Q48,70 87,58 L87,65 Q50,76 12,66 Z" fill="#8B1A1A"/></g>
+    <g class="band-4"><path d="M12,56 Q36,68 87,56 L87,63 Q38,73 12,63 Z" fill="#9B1B1B"/></g>
+    <g class="band-5">
+      <path d="M12,53 Q56,64 87,52 L87,59 Q54,69 12,60 Z" fill="#A52222"/>
+      <path d="M12,53 Q56,64 87,52" stroke="#C03030" stroke-width="0.8" fill="none" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- Fibula -->
+  <circle cx="16" cy="37" r="4" fill="#DAA520" stroke="#8B6914" stroke-width="0.6"/>
+
+  <!-- Eyes -->
+  <rect x="34" y="42" width="8" height="10" fill="#000000"/>
+  <rect x="66" y="42" width="8" height="10" fill="#000000"/>
+
+  <!-- Left arm (empty) -->
+  <rect x="2" y="44" width="12" height="8" fill="#E07C4C"/>
+
+  <!-- Right arm + triangular ruler -->
+  <g class="ruler-arm">
+    <!-- Hand drawn BEHIND triangle -->
+    <rect x="86" y="44" width="12" height="8" fill="#E07C4C"/>
+
+    <!-- Right angle at (94,48), tilted -35deg, 29px legs (20% bigger) -->
+    <g transform="rotate(-28, 94, 48)">
+      <g class="ruler">
+        <!-- Triangle with transparent cutout via evenodd -->
+        <path d="M94,48 L94,19 L123,48 Z M100,42 L109,42 L100,33 Z"
+              fill="#5B9BD5" fill-rule="evenodd" stroke="#3A6FA0" stroke-width="1.2" stroke-linejoin="round"/>
+
+        <!-- Darker edge strip along hypotenuse -->
+        <polygon points="94,19 123,48 120,45.5 97,22.5"
+                 fill="#4A87BF" opacity="0.5"/>
+
+        <!-- Inner cutout edge (thinner stroke) -->
+        <polygon points="100,42 100,33 109,42"
+                 fill="none" stroke="#3A6FA0" stroke-width="0.6" stroke-linejoin="round" opacity="0.6"/>
+
+        <!-- Right angle mark at (94,48) -->
+        <polyline points="94,43 99,43 99,48"
+                  fill="none" stroke="#3A6FA0" stroke-width="0.7" opacity="0.6"/>
+
+        <!-- Tick marks along hypotenuse (perpendicular inward) -->
+        <line x1="96.3" y1="21.3" x2="95.3" y2="22.3" stroke="#3A6FA0" stroke-width="0.6" opacity="0.6"/>
+        <line x1="100.4" y1="25.4" x2="99.4" y2="26.4" stroke="#3A6FA0" stroke-width="0.5" opacity="0.5"/>
+        <line x1="104.4" y1="29.4" x2="103.4" y2="30.4" stroke="#3A6FA0" stroke-width="0.6" opacity="0.6"/>
+        <line x1="108.5" y1="33.5" x2="107.5" y2="34.5" stroke="#3A6FA0" stroke-width="0.5" opacity="0.5"/>
+        <line x1="112.6" y1="37.6" x2="111.6" y2="38.6" stroke="#3A6FA0" stroke-width="0.6" opacity="0.6"/>
+        <line x1="116.6" y1="41.6" x2="115.6" y2="42.6" stroke="#3A6FA0" stroke-width="0.5" opacity="0.5"/>
+        <line x1="120.7" y1="45.7" x2="119.7" y2="46.7" stroke="#3A6FA0" stroke-width="0.5" opacity="0.5"/>
+
+        <!-- Highlight along left leg -->
+        <line x1="94.5" y1="47" x2="94.5" y2="20" stroke="#7BB8E8" stroke-width="0.5" opacity="0.3"/>
+        <!-- Highlight along bottom leg -->
+        <line x1="95" y1="47.5" x2="122" y2="47.5" stroke="#7BB8E8" stroke-width="0.5" opacity="0.25"/>
+      </g>
+    </g>
+  </g>
+</svg>
