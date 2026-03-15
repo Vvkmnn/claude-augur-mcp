@@ -283,7 +283,7 @@ Learn from examples:
 
 <hr>
 
-<p align="center"><a href="https://en.wikipedia.org/wiki/Tomb_of_the_Augurs"><img src="logo/tomb-of-the-augurs.jpg" alt="Tomb of the Augurs" width="340"></a></p>
+<a href="https://en.wikipedia.org/wiki/Tomb_of_the_Augurs"><img src="logo/tomb-of-the-augurs.jpg" alt="Tomb of the Augurs" width="100%"></a>
 
 <p align="center">
 

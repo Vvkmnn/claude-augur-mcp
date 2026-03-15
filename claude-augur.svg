@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 124 96" width="253" height="196">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 124 96" width="220" height="220">
   <style>
     .toga-back { animation: back-sway 3s ease-in-out infinite; transform-origin: 16px 37px; }
     .band-1 { animation: band1-sway 3.2s ease-in-out infinite; }
