@@ -24,7 +24,7 @@ Surface Claude's reasoning chain as scannable summaries:
 \u2022 augur_explain(plan_path) \u2014 Extract decisions, tradeoffs, assumptions and render as ASCII summary
 
 After writing/editing plan files, call augur_explain to generate a reasoning abstract.
-Insights use \u2605 Insight boxes. Save notable discoveries with augur_save.`;
+Insights use \u2605 Insight boxes.`;
 
 const server = new McpServer(
   { name: 'claude-augur-mcp', version },
