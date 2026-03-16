@@ -27,34 +27,46 @@ After writing/editing plan files, call augur_explain to generate a reasoning abs
 Insights use \u2605 Insight boxes.`;
 
 const server = new McpServer(
-  { name: 'claude-augur-mcp', version },
+  {
+    name: 'claude-augur-mcp',
+    version,
+    title: 'Claude Augur',
+    description: 'Plan reasoning and decision surface extraction',
+  },
   { instructions: SERVER_INSTRUCTIONS },
 );
 
-server.tool(
+server.registerTool(
   'augur_explain',
-  'Extract plan structure and return a template for inline rendering. Call after writing/editing plan files. Render the filled template INLINE in your response (not in a code block).',
   {
-    plan_path: z.string().describe('Absolute path to the plan file'),
+    title: 'Explain Plan',
+    description:
+      'Extract plan structure and return a template for inline rendering. Call after writing/editing plan files. Render the filled template INLINE in your response (not in a code block).',
+    inputSchema: {
+      plan_path: z.string().describe('Absolute path to the plan file'),
+    },
+    annotations: { readOnlyHint: true, idempotentHint: true },
   },
   async ({ plan_path }) => {
-    let planContent: string;
     try {
-      planContent = readFileSync(plan_path, 'utf-8');
-    } catch {
-      return { content: [{ type: 'text' as const, text: `Error: Cannot read plan file at ${plan_path}` }] };
+      const planContent = readFileSync(plan_path as string, 'utf-8');
+      const structure = extractPlanStructure(planContent);
+      const summary = renderSummary(structure, plan_path as string);
+      const template = renderTemplate(structure, plan_path as string);
+
+      return {
+        content: [
+          { type: 'text' as const, text: summary },
+          { type: 'text' as const, text: template },
+        ],
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        content: [{ type: 'text' as const, text: `Error: ${message}` }],
+        isError: true,
+      };
     }
-
-    const structure = extractPlanStructure(planContent);
-    const summary = renderSummary(structure, plan_path);
-    const template = renderTemplate(structure, plan_path);
-
-    return {
-      content: [
-        { type: 'text' as const, text: summary },
-        { type: 'text' as const, text: template },
-      ],
-    };
   },
 );
 
